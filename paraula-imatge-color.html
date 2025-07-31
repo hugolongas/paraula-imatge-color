@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de Atención</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      padding-top: 50px;
+      transition: background-color 0.5s ease;
+      background-color: #f0f0f0; /* Color inicial neutro */
+    }
+    img {
+      max-width: 300px;
+      height: auto;
+      margin-top: 20px;
+      border: 2px solid #ccc; /* Borde para que la imagen se vea mejor */
+    }
+    #mensaje {
+      margin-top: 20px;
+      font-size: 1.5em; /* Tamaño de fuente más grande */
+      color: #333;
+      font-weight: bold;
+    }
+    #texto {
+      font-size: 2.5em; /* Texto más grande para visibilidad */
+      min-height: 1.5em; /* Asegura espacio para el texto */
+    }
+  </style>
+</head>
+<body>
+  <h1 id="texto"></h1>
+  <img id="imagen" src="" alt="Imagen del juego" />
+  <div id="mensaje">ENTER</div>
+
+  <script>
+    // Referencias a los elementos DOM para mejor rendimiento
+    const textoElement = document.getElementById("texto");
+    const imagenElement = document.getElementById("imagen");
+    const mensajeElement = document.getElementById("mensaje");
+    const bodyElement = document.body;
+
+    // Puedes usar nombres y URLs de imágenes reales aquí
+    const nombres = [
+      "Gos",      // 
+      "Gat",      // 
+      "Cavall",   // 
+      "Ocell",    // 
+      "Peix",     // 
+      "Lleó",     // 
+      "Elefant",  // 
+      "Cadira",   // 
+      "Taula",    // 
+      "Llibre",   // 
+      "Bolígraf", // 
+      "Finestra", // 
+      "Porta",    // 
+      "Cotxe",    // 
+      "Bicicleta",// 
+      "Telèfon",  // 
+      "Clau",     // Llave
+      "Flor",     // Flor
+      "Pomera",   // Manzano
+      "Sabates"    // Zapato
+    ];
+
+    const urlsImagenes = [
+      "img/gos.png",
+      "img/gat.png",
+      "img/cavall.png",
+      "img/ocell.png",
+      "img/peix.png",
+      "img/lleo.png",
+      "img/elefant.png",
+      "img/cadira.png",
+      "img/taula.png",
+      "img/llibre.png",
+      "img/boligraf.png",
+      "img/finestra.png",
+      "img/porta.png",
+      "img/cotxe.png",
+      "img/bicicleta.png",
+      "img/telefon.png",
+      "img/clau.png",
+      "img/flor.png",
+      "img/pomera.png",
+      "img/sabates.png"
+    ];
+
+    const coloresReaccion = ["#FF0000", "#FFFF00", "#4169E1", "#FFA500", "#FFC0CB"]; // Más colores
+    // Los colores corresponden a las categorías del juego para la reacción.
+
+    let intervalId = null;
+    let esperandoEnter = true;
+    let esCoincidenciaActiva = false; // Nueva variable para controlar si hay una coincidencia esperando reacción
+
+    function cambiarContenido() {
+      // Si hay una coincidencia activa, no hagas nada hasta que se presione ENTER
+      if (esCoincidenciaActiva) return;
+
+      // Cambia el color de fondo a un color aleatorio (puede ser el color de reacción o no)
+      const colorFondo = coloresReaccion[Math.floor(Math.random() * coloresReaccion.length)];
+      bodyElement.style.backgroundColor = colorFondo;
+
+      // Selecciona un nombre y una imagen de forma independiente
+      const indexNombre = Math.floor(Math.random() * nombres.length);
+      const indexImagen = Math.floor(Math.random() * urlsImagenes.length);
+
+      textoElement.innerText = nombres[indexNombre];
+      imagenElement.src = urlsImagenes[indexImagen];
+      imagenElement.alt = "Imagen " + nombres[indexNombre]; // El alt describe lo que se muestra
+
+      // Comprueba si hay una coincidencia (índice del nombre === índice de la imagen)
+      if (indexNombre === indexImagen) {
+        clearInterval(intervalId); // Detiene los cambios
+        esperandoEnter = true;
+        esCoincidenciaActiva = true; // Marca que hay una coincidencia activa esperando reacción
+        mensajeElement.innerText = `CORRE!!!!!!!.`;
+        console.log(`¡Coincidencia! Nombre: ${nombres[indexNombre]}, Imagen: ${urlsImagenes[indexImagen]}. Color de reacción: ${colorFondo}`);
+      } else {
+        mensajeElement.innerText = "";
+        console.log(`No Coincidencia. Nombre: ${nombres[indexNombre]}, Imagen: ${urlsImagenes[indexImagen]}.`);
+      }
+    }
+
+    function iniciarOContinuarJuego() {
+      if (esperandoEnter) {
+        esperandoEnter = false;
+        esCoincidenciaActiva = false; // Resetear la coincidencia activa al iniciar/continuar        
+        cambiarContenido(); // Muestra el primer par inmediatamente
+        intervalId = setInterval(cambiarContenido, 5000); // Cambia cada 2 segundos
+      }
+    }
+
+    // Escuchar tecla ENTER
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        iniciarOContinuarJuego();
+      }
+    });
+
+    // Cargar una imagen de inicio para que no esté vacía
+    document.addEventListener("DOMContentLoaded", () => {
+      textoElement.innerText = ""; // Limpiar texto al inicio
+      imagenElement.src = "img/inici.png";
+      imagenElement.alt = "Imagen de inicio";
+    });
+  </script>
+</body>
+</html>
