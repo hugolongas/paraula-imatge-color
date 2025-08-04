@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Juego de Atención</title>
+  <title>Paraula-Imatge</title>
   <style>
     body {
       text-align: center;
@@ -39,7 +39,7 @@
     const textoElement = document.getElementById("texto");
     const imagenElement = document.getElementById("imagen");
     const mensajeElement = document.getElementById("mensaje");
-    const bodyElement = document.body;
+    const bodyElement = document.body;   
 
     // Puedes usar nombres y URLs de imágenes reales aquí
     const nombres = [
@@ -94,7 +94,7 @@
     let intervalId = null;
     let esperandoEnter = true;
     let esCoincidenciaActiva = false; // Nueva variable para controlar si hay una coincidencia esperando reacción
-
+    let comparaciones = 0;
     function cambiarContenido() {
       // Si hay una coincidencia activa, no hagas nada hasta que se presione ENTER
       if (esCoincidenciaActiva) return;
@@ -107,6 +107,9 @@
       const indexNombre = Math.floor(Math.random() * nombres.length);
       const indexImagen = Math.floor(Math.random() * urlsImagenes.length);
 
+      if(comparaciones>4 && indexNombre!=indexImagen)
+        indexNombre = indexImagen;
+
       textoElement.innerText = nombres[indexNombre];
       imagenElement.src = urlsImagenes[indexImagen];
       imagenElement.alt = "Imagen " + nombres[indexNombre]; // El alt describe lo que se muestra
@@ -118,10 +121,12 @@
         esCoincidenciaActiva = true; // Marca que hay una coincidencia activa esperando reacción
         mensajeElement.innerText = `CORRE!!!!!!!.`;
         console.log(`¡Coincidencia! Nombre: ${nombres[indexNombre]}, Imagen: ${urlsImagenes[indexImagen]}. Color de reacción: ${colorFondo}`);
+        comparaciones = 0;
       } else {
         mensajeElement.innerText = "";
         console.log(`No Coincidencia. Nombre: ${nombres[indexNombre]}, Imagen: ${urlsImagenes[indexImagen]}.`);
       }
+      comparaciones++;
     }
 
     function iniciarOContinuarJuego() {
@@ -149,3 +154,4 @@
   </script>
 </body>
 </html>
+
